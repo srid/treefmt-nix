@@ -33,7 +33,7 @@ let
     builtins.foldl'
       (options: mod: nixpkgs.lib.zipAttrsWith (_: vs: nixpkgs.lib.mkMerge vs) [
         options
-       (nixpkgs.lib.callPackage mod {}).options
+       (import mod {inherit (nixpkgs) lib config pkgs;}).options
       ])
       { }
       optionModules;
