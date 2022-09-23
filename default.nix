@@ -31,7 +31,7 @@ let
   # 'options' from all modules gathered in one place.
   mkTreefmtOptions = nixpkgs:
     builtins.foldl'
-      (options: mod: nixpkgs.lib.mkMerge [
+      (options: mod: nixpkgs.lib.zipAttrsWith (_: vs: nixpkgs.lib.mkMerge vs) [
         options
        (nixpkgs.lib.callPackage mod {}).options
       ])
