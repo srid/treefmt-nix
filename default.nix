@@ -20,11 +20,17 @@ let
             lib = nixpkgs.lib;
           };
         }
-        module-options
-      ]
-      ++ programs.modules
+      ] 
+      ++ optionModules
       ++ [ configuration ];
     };
+
+  # Modules that define the options for treefmt.
+  optionModules = [ module-options ] ++ programs.modules;
+
+  # 'options' from all modules gathered in one place.
+  mkTreefmtOptions = nixpkgs:
+    builtins.foldl' (options: module: nixpkgs.lib.mkMerge [options module.options]) {} optionModules;
 
   # Returns a treefmt.toml generated from the passed configuration.
   #
@@ -49,6 +55,7 @@ in
 {
   inherit
     module-options
+    mkTreefmtOptions
     programs
     evalModule
     mkConfigFile
